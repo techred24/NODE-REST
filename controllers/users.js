@@ -1,4 +1,5 @@
 const { response, request } = require('express');
+const Usuario = require('../models/usuario');
 
 const usuariosGet = (req = request, res = response) => {
     const query = req.query;
@@ -7,11 +8,17 @@ const usuariosGet = (req = request, res = response) => {
             query
     })
 };
-const usuariosPost = (req, res = response) => {
-    res.status(201).json({
-        msg: "post API",
-        body: req.body
-    });
+const usuariosPost = async (req, res = response) => {
+    const body = req.body;
+    const usuario = new Usuario(body);
+    try {
+        await usuario.save();
+        res.status(201).json({
+            usuario
+        });
+    } catch (error) {
+        res.status(500).json(error.message || error);
+    }
 };
 const usuariosPut = (req, res = response) => {
     const { id } = req.params;
