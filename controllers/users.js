@@ -2,12 +2,12 @@ const { response, request } = require('express');
 const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
 
-const usuariosGet = (req = request, res = response) => {
-    const query = req.query;
-    res.json({
-        msg: "get API",
-            query
-    })
+const usuariosGet = async (req = request, res = response) => {
+    const { limite = 5, desde = 0 } = req.query;
+    const usuarios = await Usuario.find()
+                            .skip(Number(desde))
+                            .limit(Number(limite))
+    res.json(usuarios)
 };
 const usuariosPost = async (req, res = response) => {
 
@@ -43,10 +43,7 @@ const usuariosPut = async(req, res = response) => {
 
     const usuario = await Usuario.findByIdAndUpdate(id, resto);
 
-    res.status(400).json({
-        msg: "put API",
-        usuario
-    });
+    res.status(400).json(usuario);
 };
 const usuariosPatch = (req, res = response) => {
     res.json({
