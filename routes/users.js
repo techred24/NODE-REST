@@ -22,6 +22,11 @@ router.post('/', [
     check('correo').custom( emailExiste ),
     validarCampos
 ] ,usersController.usuariosPost);
+router.delete('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom( existeUsuarioPorId ),
+    validarCampos
+], usersController.usuariosDelete);
 router.patch('/', usersController.usuariosPatch);
 
 
